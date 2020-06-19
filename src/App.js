@@ -1,24 +1,37 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import CurrencySelector from './components/CurrencySelector'
 import DataDisplay from './components/DataDisplay'
+import {AppContainer} from './components/StyledComponents'
+import Header from './components/Header'
 
 const App = () => {
-
-	const defaultCurrency = "AUD"
-	const [currency, setCurrency] = useState(defaultCurrency)
-	const [bitcoinData, setBitcoinData] = useState({})
-
-	function handleCurrencyChange(newCurrency) {
-		setCurrency(newCurrency)
-		console.log("currency: ", currency)
+	function currencyChangeHandler(currency) {
+		console.log("currency:", currency)
+		setCurrency(currency);
 	}
 
+	const defaultCurrency = "AUD"
+	const [currency,setCurrency] = useState(defaultCurrency)
+	const [bitcoinData, setBitcoinData] = useState({})
+
+	const bitcoinApi = "https://api.coindesk.com/v1/bpi/historical/close.json"
+	useEffect(() => {
+		console.log("inside of useEffect")
+		function getData() {
+			fetch(`${bitcoinApi}?currency=${currency}`)
+			.then(response => response.json())
+			.then(data => setBitcoinData(data.bpi))
+			.catch(e => console.error(e))
+		}
+		getData()
+	},[currency])
+
 	return (
-		<div >
-			<h1>Bitcoin Index</h1>
-			<CurrencySelector currency={currency} handleCurrencyChange={handleCurrencyChange}/>
+		<AppContainer >
+			<Header title="BITCOIN PRICE INDEX"/>
+			<CurrencySelector currency={currency} handleCurrencyChange={currencyChangeHandler} />
 			<DataDisplay data={bitcoinData}/>
-		</div>
+		</AppContainer>
 	)
 }
 

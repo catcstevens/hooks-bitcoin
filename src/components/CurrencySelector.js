@@ -1,16 +1,19 @@
-import React from 'react';
-import supportedCurrencies from '../supported-currencies.json'
+  
+import React from 'react'
+import currencies from '../supported-currencies.json'
+import {SelectContainer, SelectHeading} from './StyledComponents'
 
-const CurrencySelector = (props) => {
-	const {currency, handleCurrencyChange} = props
-	return (
-		<div>
-			<select value={currency} onChange={(event) => handleCurrencyChange(event.target.value)}>
-				{supportedCurrencies.map((currency, index) =>
-				<option key={`${index}-${currency.currency}`} value={currency.currency}> {currency.country}</option>)}
-			</select>
-		</div>
-	);
+const CurrencySelector = ({currency, handleCurrencyChange}) => {
+
+  return (
+	  <SelectContainer>
+        <SelectHeading> Select your currency: </SelectHeading>
+        <select value={currency} onChange={(event) => {handleCurrencyChange(event.target.value)}}>
+          {currencies.map((obj, index) =>
+            <option key={`${index}-${obj.country}`} value={obj.currency}> {obj.country} </option>
+          )}
+        </select>
+      </SelectContainer>
+  )
 }
-
-export default CurrencySelector;
+export default CurrencySelector
